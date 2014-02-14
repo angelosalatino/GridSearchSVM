@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package gridsearchsvm;
 
 /**
@@ -11,14 +5,51 @@ package gridsearchsvm;
  * @author angelosalatino
  */
 public class GridSearchSVM extends javax.swing.JFrame {
-
+    
     /**
      * Creates new form GridSearchSVM
      */
     public GridSearchSVM() {
         initComponents();
     }
+    
+    /*
+     * OWN METHODS
+     */
+    
+    /**
+     * This method takes the values from the GUI and populate the classifier
+     */
+    public void setClassifier()
+    {
+        
+    }
+    
+    /**
+     * This method sets the values of cost and gamma for the i-th cicle of the grid search
+     * @param cost The cost paramaeter
+     * @param gamma The gamma parameter
+     */
+    public void setCostAndGamma(double cost, double gamma)
+    {
+        
+    }
+    
+    /**
+     * Execute the grid search
+     */
+    public void executeGridSearch()
+    {
+   
+    }
+    
+    /**
+     * Execute the grid search reducing the number of variable
+     */
+    public void executeGridSearchWithVariableReducing()
+    {
 
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -38,7 +69,7 @@ public class GridSearchSVM extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JSeparator();
         jLabel3 = new javax.swing.JLabel();
         progressLabel = new javax.swing.JLabel();
-        jCheckBox1 = new javax.swing.JCheckBox();
+        checkBoxFeatures = new javax.swing.JCheckBox();
         jSeparator3 = new javax.swing.JSeparator();
         jLabel4 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
@@ -88,6 +119,11 @@ public class GridSearchSVM extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         runButton.setText("Run");
+        runButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                runButtonActionPerformed(evt);
+            }
+        });
 
         selectFile.setText("Select file");
 
@@ -99,7 +135,7 @@ public class GridSearchSVM extends javax.swing.JFrame {
 
         progressLabel.setText("100%");
 
-        jCheckBox1.setText("Feature reduction");
+        checkBoxFeatures.setText("Feature reduction");
 
         jLabel4.setText("From:");
 
@@ -219,7 +255,7 @@ public class GridSearchSVM extends javax.swing.JFrame {
                                     .addComponent(inputFile, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(selectFile))
-                                .addComponent(jCheckBox1)
+                                .addComponent(checkBoxFeatures)
                                 .addComponent(jLabel2)))
                         .addGap(3, 3, 3)
                         .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -368,7 +404,7 @@ public class GridSearchSVM extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox1)
+                .addComponent(checkBoxFeatures)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
@@ -390,7 +426,19 @@ public class GridSearchSVM extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    
+    private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
+        // TODO add your handling code here:
+        this.setClassifier();
+        if(this.checkBoxFeatures.isSelected())
+        {
+            this.executeGridSearchWithVariableReducing();
+        }else
+        {
+            this.executeGridSearch();
+        }
+    }//GEN-LAST:event_runButtonActionPerformed
+    
     /**
      * @param args the command line arguments
      */
@@ -398,7 +446,7 @@ public class GridSearchSVM extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -417,7 +465,7 @@ public class GridSearchSVM extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(GridSearchSVM.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -425,15 +473,15 @@ public class GridSearchSVM extends javax.swing.JFrame {
             }
         });
     }
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox checkBoxFeatures;
     private javax.swing.JComboBox comboDoNotReplaceMissingValues;
     private javax.swing.JComboBox comboKernelType;
     private javax.swing.JComboBox comboNormalize;
     private javax.swing.JComboBox comboProbabilityEstimates;
     private javax.swing.JComboBox comboShrinking;
     private javax.swing.JTextField inputFile;
-    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
