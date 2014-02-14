@@ -64,11 +64,11 @@
                               <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                               <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jTextField1" min="-2" pref="67" max="-2" attributes="0"/>
+                              <Component id="textFromFR" min="-2" pref="67" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
                               <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jTextField2" min="-2" pref="67" max="-2" attributes="0"/>
+                              <Component id="textToFR" min="-2" pref="67" max="-2" attributes="0"/>
                           </Group>
                           <Component id="checkBoxFeatures" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -136,13 +136,16 @@
                               </Group>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="textGamma" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <Component id="jLabel27" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="textGamma" max="32767" attributes="0"/>
+                                  </Group>
                                   <Component id="comboKernelType" alignment="0" max="32767" attributes="0"/>
                                   <Component id="textChangeSize" max="32767" attributes="0"/>
                                   <Component id="textCoef0" alignment="0" max="32767" attributes="0"/>
                                   <Component id="jComboBox1" alignment="0" max="32767" attributes="0"/>
                                   <Component id="comboDebug" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="textCost" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="textDegree" alignment="0" max="32767" attributes="0"/>
                                   <Component id="comboDoNotReplaceMissingValues" alignment="0" max="32767" attributes="0"/>
                                   <Component id="textLoss" alignment="0" max="32767" attributes="0"/>
@@ -153,6 +156,11 @@
                                   <Component id="textSeed" alignment="0" max="32767" attributes="0"/>
                                   <Component id="comboShrinking" alignment="0" max="32767" attributes="0"/>
                                   <Component id="textWeights" alignment="0" max="32767" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="jLabel26" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="textCost" max="32767" attributes="0"/>
+                                  </Group>
                               </Group>
                               <EmptySpace min="-2" pref="105" max="-2" attributes="0"/>
                           </Group>
@@ -181,7 +189,7 @@
               <Component id="jSeparator1" min="-2" pref="10" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace pref="10" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jComboBox1" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
@@ -197,9 +205,10 @@
                   <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="textCost" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="textCost" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel26" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -222,9 +231,10 @@
                   <Component id="jLabel15" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="textGamma" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabel16" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="textGamma" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel27" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel16" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -277,9 +287,9 @@
                               <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jTextField1" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="textFromFR" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jTextField2" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="textToFR" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <Component id="jSeparator4" alignment="1" min="-2" pref="78" max="-2" attributes="0"/>
@@ -341,7 +351,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Classifier SVM"/>
+        <Property name="text" type="java.lang.String" value="SVM Classifier "/>
       </Properties>
     </Component>
     <Component class="javax.swing.JSeparator" name="jSeparator2">
@@ -368,14 +378,14 @@
         <Property name="text" type="java.lang.String" value="From:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="jTextField1">
+    <Component class="javax.swing.JTextField" name="textFromFR">
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel5">
       <Properties>
         <Property name="text" type="java.lang.String" value="To:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="jTextField2">
+    <Component class="javax.swing.JTextField" name="textToFR">
     </Component>
     <Component class="javax.swing.JLabel" name="infoLabelDataset">
       <Properties>
@@ -424,7 +434,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="textCost">
       <Properties>
-        <Property name="text" type="java.lang.String" value="1.0"/>
+        <Property name="text" type="java.lang.String" value="2"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JComboBox" name="comboDebug">
@@ -461,7 +471,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="textGamma">
       <Properties>
-        <Property name="text" type="java.lang.String" value="0.0"/>
+        <Property name="text" type="java.lang.String" value="2"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JComboBox" name="comboKernelType">
@@ -620,6 +630,16 @@
     <Component class="javax.swing.JTextField" name="textNumFolds">
       <Properties>
         <Property name="text" type="java.lang.String" value="10"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel26">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="[2^-5 ... 2^15],                 costStep"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel27">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="[2^-15 ... 2^3],           costGamma"/>
       </Properties>
     </Component>
   </SubComponents>

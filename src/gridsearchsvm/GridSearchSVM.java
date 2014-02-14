@@ -38,6 +38,9 @@ public class GridSearchSVM extends javax.swing.JFrame {
             PrintWriter outf = new PrintWriter(outFile);
             
             this.infoLabelDataset.setText("Information on dataset: "+data.numInstances()+" Instances, "+data.numAttributes()+" Attr.");
+            this.textClass.setText(Integer.toString(data.numAttributes()));
+            this.textFromFR.setText(Integer.toString(data.numAttributes()-1));
+            this.textToFR.setText("1");
             
         }catch(Exception e){
             e.printStackTrace();
@@ -56,7 +59,8 @@ public class GridSearchSVM extends javax.swing.JFrame {
      */
     public void setClassifier()
     {
-        data.setClassIndex(Integer.parseInt(this.textClass.getText()));
+        data.setClassIndex(Integer.parseInt(this.textClass.getText())-1);
+        
         classifier = new LibSVM();
         
         boolean var;
@@ -99,6 +103,7 @@ public class GridSearchSVM extends javax.swing.JFrame {
         cost = Double.NaN;
         powgamma = Double.NaN;
         powcost = Double.NaN;
+        System.out.println("tutto pronto");
         
     }
     
@@ -149,9 +154,9 @@ public class GridSearchSVM extends javax.swing.JFrame {
         checkBoxFeatures = new javax.swing.JCheckBox();
         jSeparator3 = new javax.swing.JSeparator();
         jLabel4 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        textFromFR = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        textToFR = new javax.swing.JTextField();
         infoLabelDataset = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         textClass = new javax.swing.JTextField();
@@ -193,6 +198,8 @@ public class GridSearchSVM extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jLabel25 = new javax.swing.JLabel();
         textNumFolds = new javax.swing.JTextField();
+        jLabel26 = new javax.swing.JLabel();
+        jLabel27 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
@@ -215,7 +222,7 @@ public class GridSearchSVM extends javax.swing.JFrame {
 
         jLabel1.setText("Input File");
 
-        jLabel2.setText("Classifier SVM");
+        jLabel2.setText("SVM Classifier ");
 
         jLabel3.setText("Run Section");
 
@@ -241,7 +248,7 @@ public class GridSearchSVM extends javax.swing.JFrame {
 
         textCoef0.setText("0.0");
 
-        textCost.setText("1.0");
+        textCost.setText("2");
 
         comboDebug.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "True", "False" }));
         comboDebug.setSelectedIndex(1);
@@ -253,7 +260,7 @@ public class GridSearchSVM extends javax.swing.JFrame {
 
         textEps.setText("0.001");
 
-        textGamma.setText("0.0");
+        textGamma.setText("2");
 
         comboKernelType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "linear: u'*v", "polynomial: (gamma*u'*v + coef0)^degree", "radial basis fuction: exp(-gamma*|u-v|^2)", "sigmoid: tanh(gamma*u'*v + coef0)" }));
         comboKernelType.setSelectedIndex(2);
@@ -309,6 +316,10 @@ public class GridSearchSVM extends javax.swing.JFrame {
 
         textNumFolds.setText("10");
 
+        jLabel26.setText("[2^-5 ... 2^15],                 costStep");
+
+        jLabel27.setText("[2^-15 ... 2^3],           costGamma");
+
         jMenu1.setText("File");
         jMenuBar1.add(jMenu1);
 
@@ -343,11 +354,11 @@ public class GridSearchSVM extends javax.swing.JFrame {
                                 .addGap(10, 10, 10)
                                 .addComponent(jLabel4)
                                 .addGap(18, 18, 18)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(textFromFR, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(44, 44, 44)
                                 .addComponent(jLabel5)
                                 .addGap(18, 18, 18)
-                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(textToFR, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(checkBoxFeatures))
                         .addGap(48, 48, 48))
                     .addGroup(layout.createSequentialGroup()
@@ -403,13 +414,15 @@ public class GridSearchSVM extends javax.swing.JFrame {
                                     .addComponent(jLabel24))
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(textGamma, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel27)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(textGamma))
                                     .addComponent(comboKernelType, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(textChangeSize)
                                     .addComponent(textCoef0)
                                     .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(comboDebug, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(textCost, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(textDegree)
                                     .addComponent(comboDoNotReplaceMissingValues, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(textLoss)
@@ -419,7 +432,11 @@ public class GridSearchSVM extends javax.swing.JFrame {
                                     .addComponent(comboProbabilityEstimates, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(textSeed)
                                     .addComponent(comboShrinking, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(textWeights))
+                                    .addComponent(textWeights)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel26)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(textCost)))
                                 .addGap(105, 105, 105))))))
         );
         layout.setVerticalGroup(
@@ -439,7 +456,7 @@ public class GridSearchSVM extends javax.swing.JFrame {
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8))
@@ -452,8 +469,9 @@ public class GridSearchSVM extends javax.swing.JFrame {
                     .addComponent(textCoef0, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel10))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textCost, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel26)
                     .addComponent(jLabel11))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -472,8 +490,9 @@ public class GridSearchSVM extends javax.swing.JFrame {
                     .addComponent(textEps, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel15))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textGamma, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel27)
                     .addComponent(jLabel16))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -518,9 +537,9 @@ public class GridSearchSVM extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel4)
-                                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(textFromFR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel5)
-                                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(textToFR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addComponent(jSeparator4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -679,6 +698,8 @@ public class GridSearchSVM extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -693,8 +714,6 @@ public class GridSearchSVM extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
     private javax.swing.JLabel progressLabel;
     private javax.swing.JButton runButton;
     private javax.swing.JProgressBar runProgressBar;
@@ -705,11 +724,13 @@ public class GridSearchSVM extends javax.swing.JFrame {
     private javax.swing.JTextField textCost;
     private javax.swing.JTextField textDegree;
     private javax.swing.JTextField textEps;
+    private javax.swing.JTextField textFromFR;
     private javax.swing.JTextField textGamma;
     private javax.swing.JTextField textLoss;
     private javax.swing.JTextField textNu;
     private javax.swing.JTextField textNumFolds;
     private javax.swing.JTextField textSeed;
+    private javax.swing.JTextField textToFR;
     private javax.swing.JTextField textWeights;
     // End of variables declaration//GEN-END:variables
 }
