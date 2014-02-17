@@ -1,7 +1,11 @@
 package gridsearchsvm;
 import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.border.Border;
 import javax.swing.filechooser.FileFilter;
 import java.io.*;
+import java.awt.Color;
+import java.lang.Math;
 import java.util.Random;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
@@ -22,6 +26,7 @@ public class GridSearchSVM extends javax.swing.JFrame {
      */
     public GridSearchSVM() {
         initComponents();
+        canExecute = true;
     }
     
     /*
@@ -35,7 +40,7 @@ public class GridSearchSVM extends javax.swing.JFrame {
             data = new Instances(reader);//oggeto della libreria weka.
             reader.close();
             FileWriter outFile = new FileWriter(this.outputPath, true);
-            PrintWriter outf = new PrintWriter(outFile);
+            outf = new PrintWriter(outFile);
             
             this.infoLabelDataset.setText("Information on dataset: "+data.numInstances()+" Instances, "+data.numAttributes()+" Attr.");
             this.textClass.setText(Integer.toString(data.numAttributes()));
@@ -54,56 +59,140 @@ public class GridSearchSVM extends javax.swing.JFrame {
         return var;
     }
     
+    public void resetUI()
+    {
+        this.inputFile.setBorder(null);
+        this.textClass.setBorder(null);
+        this.textCacheSize.setBorder(null);
+        this.textCoef0.setBorder(null);
+        this.textDegree.setBorder(null);
+        this.textEps.setBorder(null);
+        this.textLoss.setBorder(null);
+        this.textNu.setBorder(null);
+        this.textSeed.setBorder(null);
+        this.textNumFolds.setBorder(null);
+        this.textGamma.setBorder(null);
+        this.textCost.setBorder(null);
+        
+    }
+    
     /**
      * This method takes the values from the GUI and populate the classifier
      */
     public void setClassifier()
     {
-        data.setClassIndex(Integer.parseInt(this.textClass.getText())-1);
+        Border border =BorderFactory.createLineBorder(Color.red); //just in case
+        
+        if(this.inputFile.getText().equals(""))
+        {
+            this.inputFile.setBorder(border);
+            canExecute = false;
+            JOptionPane.showMessageDialog(this, "Select input file!","Error",JOptionPane.ERROR_MESSAGE);
+        }
+        try{
+            data.setClassIndex(Integer.parseInt(this.textClass.getText())-1);
+        }catch(NumberFormatException e){
+            this.textClass.setBorder(border);
+            canExecute = false;
+            JOptionPane.showMessageDialog(this, "Class number not valid!","Error",JOptionPane.ERROR_MESSAGE);
+        }
         
         classifier = new LibSVM();
         
-        boolean var;
         
-        classifier.setSVMType(new SelectedTag(LibSVM.SVMTYPE_C_SVC, LibSVM.TAGS_SVMTYPE));
+        classifier.setSVMType(new SelectedTag(comboSvmType.getSelectedIndex(), LibSVM.TAGS_SVMTYPE));
         
-        classifier.setCacheSize(Double.parseDouble(this.textChangeSize.getText()));
-        
-        classifier.setCoef0(Double.parseDouble(this.textCoef0.getText()));
-        
+        try{
+            classifier.setCacheSize(Double.parseDouble(this.textCacheSize.getText()));
+        }catch(NumberFormatException e){
+            this.textCacheSize.setBorder(border);
+            canExecute = false;
+            JOptionPane.showMessageDialog(this, "Cache size number not valid!","Error",JOptionPane.ERROR_MESSAGE);
+        }
+        try{
+            classifier.setCoef0(Double.parseDouble(this.textCoef0.getText()));
+        }catch(NumberFormatException e){
+            this.textCoef0.setBorder(border);
+            canExecute = false;
+            JOptionPane.showMessageDialog(this, "Coef0 number not valid!","Error",JOptionPane.ERROR_MESSAGE);
+        }
         // Cost NOT SETTED FOR NOW
         
         classifier.setDebug(comboToBoolean(this.comboDebug));
         
-        classifier.setDegree(Integer.parseInt(this.textDegree.getText()));
+        try{
+            classifier.setDegree(Integer.parseInt(this.textDegree.getText()));
+        }catch(NumberFormatException e){
+            this.textDegree.setBorder(border);
+            canExecute = false;
+            JOptionPane.showMessageDialog(this, "Degree number not valid!","Error",JOptionPane.ERROR_MESSAGE);
+        }
         
         classifier.setDoNotReplaceMissingValues(comboToBoolean(this.comboDoNotReplaceMissingValues));
         
-        classifier.setEps(Double.parseDouble(this.textEps.getText()));
-        
+        try{
+            classifier.setEps(Double.parseDouble(this.textEps.getText()));
+        }catch(NumberFormatException e){
+            this.textEps.setBorder(border);
+            canExecute = false;
+            JOptionPane.showMessageDialog(this, "Eps number not valid!","Error",JOptionPane.ERROR_MESSAGE);
+        }
         // Gamma NOT SETTED FOR NOW
         
-        classifier.setKernelType(new SelectedTag(LibSVM.KERNELTYPE_RBF,LibSVM.TAGS_SVMTYPE));
+        classifier.setKernelType(new SelectedTag(comboKernelType.getSelectedIndex(),LibSVM.TAGS_SVMTYPE));
         
-        classifier.setLoss(Double.parseDouble(this.textLoss.getText()));
+        try{
+            classifier.setLoss(Double.parseDouble(this.textLoss.getText()));
+        }catch(NumberFormatException e){
+            this.textLoss.setBorder(border);
+            canExecute = false;
+            JOptionPane.showMessageDialog(this, "Loss number not valid!","Error",JOptionPane.ERROR_MESSAGE);
+        }
         
         classifier.setNormalize(comboToBoolean(this.comboNormalize));
         
-        classifier.setNu(Double.parseDouble(this.textNu.getText()));
+        try{
+            classifier.setNu(Double.parseDouble(this.textNu.getText()));
+        }catch(NumberFormatException e){
+            this.textNu.setBorder(border);
+            canExecute = false;
+            JOptionPane.showMessageDialog(this, "Nu number not valid!","Error",JOptionPane.ERROR_MESSAGE);
+        }
         
         classifier.setProbabilityEstimates(comboToBoolean(this.comboProbabilityEstimates));
         
-        seed = Integer.parseInt(this.textSeed.getText());
+        try{
+            seed = Integer.parseInt(this.textSeed.getText());
+        }catch(NumberFormatException e){
+            this.textSeed.setBorder(border);
+            canExecute = false;
+            JOptionPane.showMessageDialog(this, "Seed number not valid!","Error",JOptionPane.ERROR_MESSAGE);
+        }
         
         classifier.setShrinking(comboToBoolean(this.comboShrinking));
         
-        folds = Integer.parseInt(this.textNumFolds.getText());
+        try{
+            folds = Integer.parseInt(this.textNumFolds.getText());
+        }catch(NumberFormatException e){
+            this.textNumFolds.setBorder(border);
+            canExecute = false;
+            JOptionPane.showMessageDialog(this, "Fold number not valid!","Error",JOptionPane.ERROR_MESSAGE);
+        }
+        try{
+            gammaStep = Double.parseDouble(this.textGamma.getText());
+        }catch(NumberFormatException e){
+            this.textGamma.setBorder(border);
+            canExecute = false;
+            JOptionPane.showMessageDialog(this, "Gamma step number not valid!","Error",JOptionPane.ERROR_MESSAGE);
+        }
+        try{
+            costStep = Double.parseDouble(this.textCost.getText());
+        }catch(NumberFormatException e){
+            this.textCost.setBorder(border);
+            canExecute = false;
+            JOptionPane.showMessageDialog(this, "Cost step number not valid!","Error",JOptionPane.ERROR_MESSAGE);
+        }
         
-        gammaStep = Double.parseDouble(this.textGamma.getText());
-        
-        costStep = Double.parseDouble(this.textCost.getText());
-        
-        System.out.println("tutto pronto");
         
     }
     
@@ -114,7 +203,8 @@ public class GridSearchSVM extends javax.swing.JFrame {
      */
     public void setCostAndGamma(double cost, double gamma)
     {
-        
+        classifier.setCost(Math.pow(2, cost));
+        classifier.setGamma(Math.pow(2, gamma));
     }
     
     /**
@@ -122,6 +212,41 @@ public class GridSearchSVM extends javax.swing.JFrame {
      */
     public void executeGridSearch()
     {
+        /*
+         *  gamma = Math.pow(2, powgamma); // da 2^-15 a 2^3 ... 10 cicli
+         * cost = Math.pow(2, powcost);// da 2^-5 a 2^15 ... 11 cicli
+         */
+        try{
+            
+            Evaluation eval = new Evaluation(data);//qui indico le features
+            
+            int numberOfCycle = (int)java.lang.Math.ceil((19/gammaStep))*(int)java.lang.Math.ceil((21/costStep));
+            double step = 100/(double)numberOfCycle;
+            double progress = 0;
+            int cycles=0;
+            
+            for (double i = -15; i <= 3; i = i + gammaStep)
+            {
+                for (double j = -5; j <= 15; j = j + costStep)
+                {
+                    
+                    
+                    //this.runProgressBar.setStringPainted(true);
+                    //this.labelProgressBar.setText("Completed "+Double.toString(java.lang.Math.ceil(progress))+"%");
+                    this.setCostAndGamma(j, i);
+                    Classifier classCopy = Classifier.makeCopy(classifier);
+                    classCopy.buildClassifier(data);
+                    eval.crossValidateModel(classCopy, data, folds, new Random(seed), new Object[] { });
+                    outf.println("Cost: "+j+" Gamma: "+i+" Attributi: " + data.numAttributes()+" F Measure: "+eval.weightedFMeasure() + " True Positive: " + eval.weightedTruePositiveRate());
+                    outf.flush();
+                    progress += step;
+                    this.runProgressBar.setValue((int)java.lang.Math.ceil(progress));
+                }
+            }
+            System.out.println(cycles);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         
     }
     
@@ -150,7 +275,6 @@ public class GridSearchSVM extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
         jLabel3 = new javax.swing.JLabel();
-        progressLabel = new javax.swing.JLabel();
         checkBoxFeatures = new javax.swing.JCheckBox();
         jSeparator3 = new javax.swing.JSeparator();
         jLabel4 = new javax.swing.JLabel();
@@ -161,9 +285,9 @@ public class GridSearchSVM extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         textClass = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
+        comboSvmType = new javax.swing.JComboBox();
         jLabel9 = new javax.swing.JLabel();
-        textChangeSize = new javax.swing.JTextField();
+        textCacheSize = new javax.swing.JTextField();
         textCoef0 = new javax.swing.JTextField();
         textCost = new javax.swing.JTextField();
         comboDebug = new javax.swing.JComboBox();
@@ -228,8 +352,6 @@ public class GridSearchSVM extends javax.swing.JFrame {
 
         jLabel3.setText("Run Section");
 
-        progressLabel.setText("0%");
-
         checkBoxFeatures.setText("Feature reduction");
 
         jLabel4.setText("From:");
@@ -242,11 +364,11 @@ public class GridSearchSVM extends javax.swing.JFrame {
 
         jLabel8.setText("SVMType");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "C-SVC (classification)", "nu-SVC (classification)", "one-class SVM (classification)", "epsilon-SVR (regression)", "nu-SVR (regression)" }));
+        comboSvmType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "C-SVC (classification)", "nu-SVC (classification)", "one-class SVM (classification)", "epsilon-SVR (regression)", "nu-SVR (regression)" }));
 
         jLabel9.setText("cacheSize");
 
-        textChangeSize.setText("40.0");
+        textCacheSize.setText("40.0");
 
         textCoef0.setText("0.0");
 
@@ -368,36 +490,12 @@ public class GridSearchSVM extends javax.swing.JFrame {
                             .addComponent(checkBoxFeatures))
                         .addGap(48, 48, 48))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel1)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(inputFile, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(selectFile))
-                                    .addComponent(jLabel2))
-                                .addGap(42, 42, 42))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(infoLabelDataset, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                        .addComponent(textClass, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(runProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 424, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(4, 4, 4)
-                                .addComponent(progressLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(50, 50, 50)
-                                .addComponent(runButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(runButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel8)
@@ -424,9 +522,9 @@ public class GridSearchSVM extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(textGamma))
                                     .addComponent(comboKernelType, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(textChangeSize)
+                                    .addComponent(textCacheSize)
                                     .addComponent(textCoef0)
-                                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(comboSvmType, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(comboDebug, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(textDegree)
                                     .addComponent(comboDoNotReplaceMissingValues, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -447,7 +545,31 @@ public class GridSearchSVM extends javax.swing.JFrame {
                                     .addComponent(gammaStepLabelHelp)
                                     .addComponent(costStepLabelHelp))
                                 .addGap(15, 15, 15)))
-                        .addContainerGap())))
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(12, 12, 12)
+                                .addComponent(runProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 424, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel1)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(inputFile, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(selectFile))
+                                            .addComponent(jLabel2))
+                                        .addGap(42, 42, 42))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(infoLabelDataset, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel7)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                                .addComponent(textClass, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -466,13 +588,13 @@ public class GridSearchSVM extends javax.swing.JFrame {
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(comboSvmType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(textChangeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(textCacheSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -556,20 +678,21 @@ public class GridSearchSVM extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel3)
-                        .addGap(7, 7, 7)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(runButton)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(runProgressBar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                                .addComponent(progressLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addComponent(jLabel3))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel6)
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel25)
                             .addComponent(textNumFolds, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(19, 19, 19))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(7, 7, 7)
+                        .addComponent(runButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(runProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18))
         );
 
         pack();
@@ -577,13 +700,18 @@ public class GridSearchSVM extends javax.swing.JFrame {
     
     private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
         // TODO add your handling code here:
+        canExecute = true;
+        this.resetUI();
         this.setClassifier();
-        if(this.checkBoxFeatures.isSelected())
+        if(canExecute)
         {
-            this.executeGridSearchWithVariableReducing();
-        }else
-        {
-            this.executeGridSearch();
+            if(this.checkBoxFeatures.isSelected())
+            {
+                this.executeGridSearchWithVariableReducing();
+            }else
+            {
+                this.executeGridSearch();
+            }
         }
     }//GEN-LAST:event_runButtonActionPerformed
     
@@ -679,6 +807,10 @@ public class GridSearchSVM extends javax.swing.JFrame {
     double costStep;
     int folds; //for cross validation
     
+    boolean canExecute;
+    
+    PrintWriter outf;
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox checkBoxFeatures;
     private javax.swing.JComboBox comboDebug;
@@ -687,11 +819,11 @@ public class GridSearchSVM extends javax.swing.JFrame {
     private javax.swing.JComboBox comboNormalize;
     private javax.swing.JComboBox comboProbabilityEstimates;
     private javax.swing.JComboBox comboShrinking;
+    private javax.swing.JComboBox comboSvmType;
     private javax.swing.JLabel costStepLabelHelp;
     private javax.swing.JLabel gammaStepLabelHelp;
     private javax.swing.JLabel infoLabelDataset;
     private javax.swing.JTextField inputFile;
-    private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -726,11 +858,10 @@ public class GridSearchSVM extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
-    private javax.swing.JLabel progressLabel;
     private javax.swing.JButton runButton;
     private javax.swing.JProgressBar runProgressBar;
     private javax.swing.JButton selectFile;
-    private javax.swing.JTextField textChangeSize;
+    private javax.swing.JTextField textCacheSize;
     private javax.swing.JTextField textClass;
     private javax.swing.JTextField textCoef0;
     private javax.swing.JTextField textCost;
