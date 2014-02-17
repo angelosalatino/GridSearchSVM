@@ -99,10 +99,10 @@ public class GridSearchSVM extends javax.swing.JFrame {
         
         folds = Integer.parseInt(this.textNumFolds.getText());
         
-        gamma = Double.NaN;
-        cost = Double.NaN;
-        powgamma = Double.NaN;
-        powcost = Double.NaN;
+        gammaStep = Double.parseDouble(this.textGamma.getText());
+        
+        costStep = Double.parseDouble(this.textCost.getText());
+        
         System.out.println("tutto pronto");
         
     }
@@ -200,6 +200,8 @@ public class GridSearchSVM extends javax.swing.JFrame {
         textNumFolds = new javax.swing.JTextField();
         jLabel26 = new javax.swing.JLabel();
         jLabel27 = new javax.swing.JLabel();
+        costStepLabelHelp = new javax.swing.JLabel();
+        gammaStepLabelHelp = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
@@ -272,7 +274,7 @@ public class GridSearchSVM extends javax.swing.JFrame {
 
         textNu.setText("0.5");
 
-        comboProbabilityEstimates.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboProbabilityEstimates.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "False", "True" }));
 
         textSeed.setText("1");
 
@@ -319,6 +321,10 @@ public class GridSearchSVM extends javax.swing.JFrame {
         jLabel26.setText("[2^-5 ... 2^15],                 costStep");
 
         jLabel27.setText("[2^-15 ... 2^3],           costGamma");
+
+        costStepLabelHelp.setText("?");
+
+        gammaStepLabelHelp.setText("?");
 
         jMenu1.setText("File");
         jMenuBar1.add(jMenu1);
@@ -391,8 +397,7 @@ public class GridSearchSVM extends javax.swing.JFrame {
                                 .addGap(4, 4, 4)
                                 .addComponent(progressLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(50, 50, 50)
-                                .addComponent(runButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap())
+                                .addComponent(runButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel8)
@@ -437,7 +442,12 @@ public class GridSearchSVM extends javax.swing.JFrame {
                                         .addComponent(jLabel26)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(textCost)))
-                                .addGap(105, 105, 105))))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(gammaStepLabelHelp)
+                                    .addComponent(costStepLabelHelp))
+                                .addGap(15, 15, 15)))
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -472,7 +482,8 @@ public class GridSearchSVM extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textCost, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel26)
-                    .addComponent(jLabel11))
+                    .addComponent(jLabel11)
+                    .addComponent(costStepLabelHelp))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(comboDebug, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -492,8 +503,9 @@ public class GridSearchSVM extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textGamma, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel27)
-                    .addComponent(jLabel16))
+                    .addComponent(jLabel16)
+                    .addComponent(gammaStepLabelHelp)
+                    .addComponent(jLabel27))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(comboKernelType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -663,10 +675,8 @@ public class GridSearchSVM extends javax.swing.JFrame {
     LibSVM classifier;
     
     int seed; //for random numbers
-    double gamma;
-    double cost;
-    double powgamma;
-    double powcost;
+    double gammaStep;
+    double costStep;
     int folds; //for cross validation
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -677,6 +687,8 @@ public class GridSearchSVM extends javax.swing.JFrame {
     private javax.swing.JComboBox comboNormalize;
     private javax.swing.JComboBox comboProbabilityEstimates;
     private javax.swing.JComboBox comboShrinking;
+    private javax.swing.JLabel costStepLabelHelp;
+    private javax.swing.JLabel gammaStepLabelHelp;
     private javax.swing.JLabel infoLabelDataset;
     private javax.swing.JTextField inputFile;
     private javax.swing.JComboBox jComboBox1;

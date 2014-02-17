@@ -112,7 +112,6 @@
                               <Component id="progressLabel" min="-2" pref="52" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
                               <Component id="runButton" min="-2" pref="65" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
                               <Group type="103" groupAlignment="1" attributes="0">
@@ -162,9 +161,15 @@
                                       <Component id="textCost" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
-                              <EmptySpace min="-2" pref="105" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Component id="gammaStepLabelHelp" min="-2" max="-2" attributes="0"/>
+                                  <Component id="costStepLabelHelp" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
                           </Group>
                       </Group>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -209,6 +214,7 @@
                   <Component id="textCost" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel26" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="costStepLabelHelp" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -233,8 +239,9 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="textGamma" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabel27" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel16" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="gammaStepLabelHelp" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel27" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -511,11 +518,9 @@
     <Component class="javax.swing.JComboBox" name="comboProbabilityEstimates">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="4">
-            <StringItem index="0" value="Item 1"/>
-            <StringItem index="1" value="Item 2"/>
-            <StringItem index="2" value="Item 3"/>
-            <StringItem index="3" value="Item 4"/>
+          <StringArray count="2">
+            <StringItem index="0" value="False"/>
+            <StringItem index="1" value="True"/>
           </StringArray>
         </Property>
       </Properties>
@@ -640,6 +645,16 @@
     <Component class="javax.swing.JLabel" name="jLabel27">
       <Properties>
         <Property name="text" type="java.lang.String" value="[2^-15 ... 2^3],           costGamma"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="costStepLabelHelp">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="?"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="gammaStepLabelHelp">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="?"/>
       </Properties>
     </Component>
   </SubComponents>
