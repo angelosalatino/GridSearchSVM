@@ -30,8 +30,8 @@ public class GridSearchSVM extends javax.swing.JFrame {
     }
     
     /*
-     * OWN METHODS
-     */
+    * OWN METHODS
+    */
     
     public void openFiles()
     {
@@ -196,9 +196,57 @@ public class GridSearchSVM extends javax.swing.JFrame {
         
     }
     
+    public void checkFeatureReduction()
+    {
+        //it is supposed that the check box is checked, but it is necessary another control
+        Border border =BorderFactory.createLineBorder(Color.red);
+        if(this.checkBoxFeatures.isSelected())
+        {
+            try{
+                featFrom = Integer.parseInt(this.textFromFR.getText());
+            }catch(NumberFormatException e){
+                this.textFromFR.setBorder(border);
+                canExecute = false;
+                JOptionPane.showMessageDialog(this, "From Feature number not valid!","Error",JOptionPane.ERROR_MESSAGE);
+            }
+            try{
+                featTo = Integer.parseInt(this.textToFR.getText());
+            }catch(NumberFormatException e){
+                this.textToFR.setBorder(border);
+                canExecute = false;
+                JOptionPane.showMessageDialog(this, "To Feature number not valid!","Error",JOptionPane.ERROR_MESSAGE);
+            }
+            
+            if (featTo >= featFrom)
+            {
+                this.textFromFR.setBorder(border);
+                this.textToFR.setBorder(border);
+                canExecute = false;
+                JOptionPane.showMessageDialog(this, "To Feature number is greater than From Feature number!","Error",JOptionPane.ERROR_MESSAGE);
+            }
+            
+            if (featFrom > data.numAttributes())
+            {
+                this.textFromFR.setBorder(border);
+                canExecute = false;
+                JOptionPane.showMessageDialog(this, "From Feature number is greater than number of attributes!","Error",JOptionPane.ERROR_MESSAGE);
+            }
+            
+            if (featTo < 0)
+            {
+                this.textToFR.setBorder(border);
+                canExecute = false;
+                JOptionPane.showMessageDialog(this, "To Feature number is less than 0!","Error",JOptionPane.ERROR_MESSAGE);
+            }
+        }else
+        {
+            JOptionPane.showMessageDialog(this, "Error 1. Something is gone wrong","Error",JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
     /**
      * This method sets the values of cost and gamma for the i-th cicle of the grid search
-     * @param cost The cost paramaeter
+     * @param cost The cost parameter
      * @param gamma The gamma parameter
      */
     public void setCostAndGamma(double cost, double gamma)
@@ -213,40 +261,53 @@ public class GridSearchSVM extends javax.swing.JFrame {
     public void executeGridSearch()
     {
         /*
-         *  gamma = Math.pow(2, powgamma); // da 2^-15 a 2^3 ... 10 cicli
-         * cost = Math.pow(2, powcost);// da 2^-5 a 2^15 ... 11 cicli
-         */
-        try{
+        *  gamma = Math.pow(2, powgamma); // da 2^-15 a 2^3 ... 10 cicli
+        * cost = Math.pow(2, powcost);// da 2^-5 a 2^15 ... 11 cicli
+        */
+        System.out.println("avvio thread");
+        new Thread(new Runnable() {
             
-            Evaluation eval = new Evaluation(data);//qui indico le features
             
-            int numberOfCycle = (int)java.lang.Math.ceil((19/gammaStep))*(int)java.lang.Math.ceil((21/costStep));
-            double step = 100/(double)numberOfCycle;
-            double progress = 0;
-            int cycles=0;
-            
-            for (double i = -15; i <= 3; i = i + gammaStep)
-            {
-                for (double j = -5; j <= 15; j = j + costStep)
-                {
+            public void run() {
+                System.out.println("thread avviato");
+                
+                try{
                     
+                    Evaluation eval = new Evaluation(data);//qui indico le features
                     
-                    //this.runProgressBar.setStringPainted(true);
-                    //this.labelProgressBar.setText("Completed "+Double.toString(java.lang.Math.ceil(progress))+"%");
-                    this.setCostAndGamma(j, i);
-                    Classifier classCopy = Classifier.makeCopy(classifier);
-                    classCopy.buildClassifier(data);
-                    eval.crossValidateModel(classCopy, data, folds, new Random(seed), new Object[] { });
-                    outf.println("Cost: "+j+" Gamma: "+i+" Attributi: " + data.numAttributes()+" F Measure: "+eval.weightedFMeasure() + " True Positive: " + eval.weightedTruePositiveRate());
-                    outf.flush();
-                    progress += step;
-                    this.runProgressBar.setValue((int)java.lang.Math.ceil(progress));
+                    int numberOfCycle = (int)java.lang.Math.ceil((19/gammaStep))*(int)java.lang.Math.ceil((21/costStep));
+                    double step = 100/(double)numberOfCycle;
+                    double progress = 0;
+                    for (int k = featFrom; k > featTo; k--)
+                    {
+                        for (double i = -5; i <= 15; i = i + costStep)
+                        {
+                            for (double j = -15; j <= 3; j = j + gammaStep)
+                            {
+                                
+                                
+                                //this.runProgressBar.setStringPainted(true);
+                                //this.labelProgressBar.setText("Completed "+Double.toString(java.lang.Math.ceil(progress))+"%");
+                                setCostAndGamma(i,j);
+                                Classifier classCopy = Classifier.makeCopy(classifier);
+                                classCopy.buildClassifier(data);
+                                eval.crossValidateModel(classCopy, data, folds, new Random(seed), new Object[] { });
+                                outf.println("Cost: "+i+" Gamma: "+j+" Attributi: " + data.numAttributes()+" F Measure: "+eval.weightedFMeasure() + " True Positive: " + eval.weightedTruePositiveRate());
+                                outf.flush();
+                                progress += step;
+                                runProgressBar.setValue((int)java.lang.Math.ceil(progress));
+                                runProgressBar.repaint();
+                            }
+                        }
+                        if(data.numAttributes() >= 2) data.deleteAttributeAt(data.numAttributes() - 2);
+                    }
+                    
+                }catch(Exception e){
+                    e.printStackTrace();
                 }
             }
-            System.out.println(cycles);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+        }).start();
+        
         
     }
     
@@ -255,7 +316,76 @@ public class GridSearchSVM extends javax.swing.JFrame {
      */
     public void executeGridSearchWithVariableReducing()
     {
-        
+        System.out.println("avvio thread");
+//        new Thread(new Runnable() {
+//            
+//            
+//            public void run() {
+//                System.out.println("thread avviato");
+//                try{
+//                    
+//                    Evaluation eval = new Evaluation(data);//qui indico le features
+//                    
+//                    int numberOfCycle = (int)java.lang.Math.ceil((19/gammaStep))*(int)java.lang.Math.ceil((21/costStep))*(featFrom - featTo);
+//                    double step = 100/(double)numberOfCycle;
+//                    double progress = 0;
+//                    
+//                    
+//                    for (double i = -5; i <= 15; i = i + costStep)
+//                    {
+//                        for (double j = -15; j <= 3; j = j + gammaStep)
+//                        {
+//                            
+//                            
+//                            //this.runProgressBar.setStringPainted(true);
+//                            //this.labelProgressBar.setText("Completed "+Double.toString(java.lang.Math.ceil(progress))+"%");
+//                            setCostAndGamma(i,j);
+//                            Classifier classCopy = Classifier.makeCopy(classifier);
+//                            classCopy.buildClassifier(data);
+//                            eval.crossValidateModel(classCopy, data, folds, new Random(seed), new Object[] { });
+//                            outf.println("Cost: "+i+" Gamma: "+j+" Attributi: " + data.numAttributes()+" F Measure: "+eval.weightedFMeasure() + " True Positive: " + eval.weightedTruePositiveRate());
+//                            outf.flush();
+//                            progress += step;
+//                            runProgressBar.setValue((int)java.lang.Math.ceil(progress));
+//                            runProgressBar.repaint();
+//                        }
+//                    }
+//                }catch(Exception e){
+//                    e.printStackTrace();
+//                }
+//            }
+//        }).start();
+        try{
+                    
+                    Evaluation eval = new Evaluation(data);//qui indico le features
+                    
+                    int numberOfCycle = (int)java.lang.Math.ceil((19/gammaStep))*(int)java.lang.Math.ceil((21/costStep))*(featFrom - featTo);
+                    double step = 100/(double)numberOfCycle;
+                    double progress = 0;
+                    
+                    
+                    for (double i = -5; i <= 15; i = i + costStep)
+                    {
+                        for (double j = -15; j <= 3; j = j + gammaStep)
+                        {
+                            
+                            
+                            //this.runProgressBar.setStringPainted(true);
+                            //this.labelProgressBar.setText("Completed "+Double.toString(java.lang.Math.ceil(progress))+"%");
+                            setCostAndGamma(i,j);
+                            Classifier classCopy = Classifier.makeCopy(classifier);
+                            classCopy.buildClassifier(data);
+                            eval.crossValidateModel(classCopy, data, folds, new Random(seed), new Object[] { });
+                            outf.println("Cost: "+i+" Gamma: "+j+" Attributi: " + data.numAttributes()+" F Measure: "+eval.weightedFMeasure() + " True Positive: " + eval.weightedTruePositiveRate());
+                            outf.flush();
+                            progress += step;
+                            runProgressBar.setValue((int)java.lang.Math.ceil(progress));
+                            runProgressBar.repaint();
+                        }
+                    }
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -703,16 +833,17 @@ public class GridSearchSVM extends javax.swing.JFrame {
         canExecute = true;
         this.resetUI();
         this.setClassifier();
-        if(canExecute)
+        
+        
+        if(this.checkBoxFeatures.isSelected())
         {
-            if(this.checkBoxFeatures.isSelected())
-            {
-                this.executeGridSearchWithVariableReducing();
-            }else
-            {
-                this.executeGridSearch();
-            }
+            this.checkFeatureReduction();
+            if (canExecute) this.executeGridSearchWithVariableReducing();
+        }else
+        {
+            if (canExecute) this.executeGridSearch();
         }
+        
     }//GEN-LAST:event_runButtonActionPerformed
     
     private void selectFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectFileActionPerformed
@@ -768,8 +899,8 @@ public class GridSearchSVM extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-         */
+        * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+        */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -808,6 +939,9 @@ public class GridSearchSVM extends javax.swing.JFrame {
     int folds; //for cross validation
     
     boolean canExecute;
+    
+    int featFrom;
+    int featTo;
     
     PrintWriter outf;
     
