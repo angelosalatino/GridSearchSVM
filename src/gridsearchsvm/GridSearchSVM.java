@@ -33,6 +33,9 @@ public class GridSearchSVM extends javax.swing.JFrame {
     * OWN METHODS
     */
     
+    /**
+     * Open the file: input-arff and output-txt
+     */
     public void openFiles()
     {
         try{
@@ -47,11 +50,24 @@ public class GridSearchSVM extends javax.swing.JFrame {
             this.textFromFR.setText(Integer.toString(data.numAttributes()-1));
             this.textToFR.setText("1");
             
-        }catch(Exception e){
-            e.printStackTrace();
+        }catch(IOException e){
+            JOptionPane.showMessageDialog(this, "File format unrecognized. Please select another input file!","Error",JOptionPane.ERROR_MESSAGE);
         }
     }
     
+    /**
+     * close the output file
+     */
+    public void closeFileOutput()
+    {
+        outf.close();
+    }
+    
+    /**
+     * Converts a boolean combobox to a boolean value
+     * @param comboBoxIn a input combobox
+     * @return the boolean value
+     */
     public boolean comboToBoolean(JComboBox comboBoxIn)
     {
         boolean var;
@@ -59,6 +75,9 @@ public class GridSearchSVM extends javax.swing.JFrame {
         return var;
     }
     
+    /**
+     * resets the style to textfields
+     */
     public void resetUI()
     {
         this.inputFile.setBorder(null);
@@ -196,6 +215,9 @@ public class GridSearchSVM extends javax.swing.JFrame {
         
     }
     
+    /**
+     * check if feature reduction has been selected and make a correct controls on the values
+     */
     public void checkFeatureReduction()
     {
         //it is supposed that the check box is checked, but it is necessary another control
@@ -271,12 +293,11 @@ public class GridSearchSVM extends javax.swing.JFrame {
                 
                 try{
                     
-                    Evaluation eval = new Evaluation(data);//qui indico le features
                     
-                    int numberOfCycle = (int)java.lang.Math.ceil((19/gammaStep))*(int)java.lang.Math.ceil((21/costStep));
+                    int numberOfCycle = (int)java.lang.Math.ceil((19/gammaStep))*(int)java.lang.Math.ceil((21/costStep))*(featFrom - featTo);
                     double step = 100/(double)numberOfCycle;
                     double progress = 0;
-                    for (int k = featFrom; k > featTo; k--)
+                    for (int k = featFrom; k >= featTo; k--)
                     {
                         for (double i = -5; i <= 15; i = i + costStep)
                         {
@@ -287,8 +308,9 @@ public class GridSearchSVM extends javax.swing.JFrame {
                                 //this.runProgressBar.setStringPainted(true);
                                 //this.labelProgressBar.setText("Completed "+Double.toString(java.lang.Math.ceil(progress))+"%");
                                 setCostAndGamma(i,j);
+                                Evaluation eval = new Evaluation(data);//qui indico le features
                                 Classifier classCopy = Classifier.makeCopy(classifier);
-                                classCopy.buildClassifier(data);
+                                classCopy.buildClassifier(data);                                
                                 eval.crossValidateModel(classCopy, data, folds, new Random(seed), new Object[] { });
                                 outf.println("Cost: "+i+" Gamma: "+j+" Attributi: " + data.numAttributes()+" F Measure: "+eval.weightedFMeasure() + " True Positive: " + eval.weightedTruePositiveRate());
                                 outf.flush();
@@ -299,6 +321,8 @@ public class GridSearchSVM extends javax.swing.JFrame {
                         }
                         if(data.numAttributes() >= 2) data.deleteAttributeAt(data.numAttributes() - 2);
                     }
+                    
+                    closeFileOutput();
                     
                 }catch(Exception e){
                     e.printStackTrace();
@@ -318,16 +342,16 @@ public class GridSearchSVM extends javax.swing.JFrame {
         *  gamma = Math.pow(2, powgamma); // da 2^-15 a 2^3 ... 10 cicli
         * cost = Math.pow(2, powcost);// da 2^-5 a 2^15 ... 11 cicli
         */
-
+        
         new Thread(new Runnable() {
             
             
             public void run() {
                 try{
                     
-                    Evaluation eval = new Evaluation(data);//qui indico le features
                     
-                    int numberOfCycle = (int)java.lang.Math.ceil((19/gammaStep))*(int)java.lang.Math.ceil((21/costStep))*(featFrom - featTo);
+                    
+                    int numberOfCycle = (int)java.lang.Math.ceil((19/gammaStep))*(int)java.lang.Math.ceil((21/costStep));
                     double step = 100/(double)numberOfCycle;
                     double progress = 0;
                     
@@ -341,8 +365,9 @@ public class GridSearchSVM extends javax.swing.JFrame {
                             //this.runProgressBar.setStringPainted(true);
                             //this.labelProgressBar.setText("Completed "+Double.toString(java.lang.Math.ceil(progress))+"%");
                             setCostAndGamma(i,j);
+                            Evaluation eval = new Evaluation(data);//qui indico le features
                             Classifier classCopy = Classifier.makeCopy(classifier);
-                            classCopy.buildClassifier(data);
+                            classCopy.buildClassifier(data);                            
                             eval.crossValidateModel(classCopy, data, folds, new Random(seed), new Object[] { });
                             outf.println("Cost: "+i+" Gamma: "+j+" Attributi: " + data.numAttributes()+" F Measure: "+eval.weightedFMeasure() + " True Positive: " + eval.weightedTruePositiveRate());
                             outf.flush();
@@ -351,6 +376,8 @@ public class GridSearchSVM extends javax.swing.JFrame {
                             runProgressBar.repaint();
                         }
                     }
+                    
+                    closeFileOutput();
                 }catch(Exception e){
                     e.printStackTrace();
                 }
@@ -358,6 +385,7 @@ public class GridSearchSVM extends javax.swing.JFrame {
         }).start();
         
     }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -814,9 +842,14 @@ public class GridSearchSVM extends javax.swing.JFrame {
         {
             if (canExecute) this.executeGridSearch();
         }
+       
         
     }//GEN-LAST:event_runButtonActionPerformed
     
+    /**
+     * This method is launched when the select file from gui is pressed
+     * @param evt the event
+     */
     private void selectFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectFileActionPerformed
         // TODO add your handling code here:
         JFileChooser fileChooser = new JFileChooser();
@@ -857,9 +890,6 @@ public class GridSearchSVM extends javax.swing.JFrame {
                 this.openFiles();
                 
             }
-            //System.out.println(selectedFile.getParent());
-            //System.out.println(selectedFile.getName());
-            //System.out.println(outputPath);
         } 
     }//GEN-LAST:event_selectFileActionPerformed
     
