@@ -253,23 +253,21 @@ public class GridSearchSVM extends javax.swing.JFrame {
     {
         classifier.setCost(Math.pow(2, cost));
         classifier.setGamma(Math.pow(2, gamma));
+        System.out.println(cost+" "+gamma);
     }
     
     /**
-     * Execute the grid search
+     * Execute the grid search reducing the number of variable
      */
-    public void executeGridSearch()
+    public void executeGridSearchWithVariableReducing()
     {
-        /*
-        *  gamma = Math.pow(2, powgamma); // da 2^-15 a 2^3 ... 10 cicli
-        * cost = Math.pow(2, powcost);// da 2^-5 a 2^15 ... 11 cicli
-        */
-        System.out.println("avvio thread");
+        
+        
         new Thread(new Runnable() {
             
             
+            
             public void run() {
-                System.out.println("thread avviato");
                 
                 try{
                     
@@ -312,50 +310,20 @@ public class GridSearchSVM extends javax.swing.JFrame {
     }
     
     /**
-     * Execute the grid search reducing the number of variable
+     * Execute the grid search
      */
-    public void executeGridSearchWithVariableReducing()
+    public void executeGridSearch()
     {
-        System.out.println("avvio thread");
-//        new Thread(new Runnable() {
-//            
-//            
-//            public void run() {
-//                System.out.println("thread avviato");
-//                try{
-//                    
-//                    Evaluation eval = new Evaluation(data);//qui indico le features
-//                    
-//                    int numberOfCycle = (int)java.lang.Math.ceil((19/gammaStep))*(int)java.lang.Math.ceil((21/costStep))*(featFrom - featTo);
-//                    double step = 100/(double)numberOfCycle;
-//                    double progress = 0;
-//                    
-//                    
-//                    for (double i = -5; i <= 15; i = i + costStep)
-//                    {
-//                        for (double j = -15; j <= 3; j = j + gammaStep)
-//                        {
-//                            
-//                            
-//                            //this.runProgressBar.setStringPainted(true);
-//                            //this.labelProgressBar.setText("Completed "+Double.toString(java.lang.Math.ceil(progress))+"%");
-//                            setCostAndGamma(i,j);
-//                            Classifier classCopy = Classifier.makeCopy(classifier);
-//                            classCopy.buildClassifier(data);
-//                            eval.crossValidateModel(classCopy, data, folds, new Random(seed), new Object[] { });
-//                            outf.println("Cost: "+i+" Gamma: "+j+" Attributi: " + data.numAttributes()+" F Measure: "+eval.weightedFMeasure() + " True Positive: " + eval.weightedTruePositiveRate());
-//                            outf.flush();
-//                            progress += step;
-//                            runProgressBar.setValue((int)java.lang.Math.ceil(progress));
-//                            runProgressBar.repaint();
-//                        }
-//                    }
-//                }catch(Exception e){
-//                    e.printStackTrace();
-//                }
-//            }
-//        }).start();
-        try{
+        /*
+        *  gamma = Math.pow(2, powgamma); // da 2^-15 a 2^3 ... 10 cicli
+        * cost = Math.pow(2, powcost);// da 2^-5 a 2^15 ... 11 cicli
+        */
+
+        new Thread(new Runnable() {
+            
+            
+            public void run() {
+                try{
                     
                     Evaluation eval = new Evaluation(data);//qui indico le features
                     
@@ -386,6 +354,9 @@ public class GridSearchSVM extends javax.swing.JFrame {
                 }catch(Exception e){
                     e.printStackTrace();
                 }
+            }
+        }).start();
+        
     }
     /**
      * This method is called from within the constructor to initialize the form.
