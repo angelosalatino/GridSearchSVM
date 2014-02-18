@@ -293,7 +293,7 @@ public class GridSearchSVM extends javax.swing.JFrame {
                 
                 try{
                     
-                    
+                    runButton.setEnabled(false);
                     int numberOfCycle = (int)java.lang.Math.ceil((19/gammaStep))*(int)java.lang.Math.ceil((21/costStep))*(featFrom - featTo);
                     double step = 100/(double)numberOfCycle;
                     double progress = 0;
@@ -310,7 +310,7 @@ public class GridSearchSVM extends javax.swing.JFrame {
                                 setCostAndGamma(i,j);
                                 Evaluation eval = new Evaluation(data);//qui indico le features
                                 Classifier classCopy = Classifier.makeCopy(classifier);
-                                classCopy.buildClassifier(data);                                
+                                classCopy.buildClassifier(data);
                                 eval.crossValidateModel(classCopy, data, folds, new Random(seed), new Object[] { });
                                 outf.println("Cost: "+i+" Gamma: "+j+" Attributi: " + data.numAttributes()+" F Measure: "+eval.weightedFMeasure() + " True Positive: " + eval.weightedTruePositiveRate());
                                 outf.flush();
@@ -323,7 +323,9 @@ public class GridSearchSVM extends javax.swing.JFrame {
                     }
                     
                     closeFileOutput();
-                    
+                    JFrame testFrame = new JFrame();
+                    JOptionPane.showMessageDialog(testFrame, "Processing finished","Done",JOptionPane.INFORMATION_MESSAGE);
+                    runButton.setEnabled(true);
                 }catch(Exception e){
                     e.printStackTrace();
                 }
@@ -350,7 +352,7 @@ public class GridSearchSVM extends javax.swing.JFrame {
                 try{
                     
                     
-                    
+                    runButton.setEnabled(false);
                     int numberOfCycle = (int)java.lang.Math.ceil((19/gammaStep))*(int)java.lang.Math.ceil((21/costStep));
                     double step = 100/(double)numberOfCycle;
                     double progress = 0;
@@ -367,7 +369,7 @@ public class GridSearchSVM extends javax.swing.JFrame {
                             setCostAndGamma(i,j);
                             Evaluation eval = new Evaluation(data);//qui indico le features
                             Classifier classCopy = Classifier.makeCopy(classifier);
-                            classCopy.buildClassifier(data);                            
+                            classCopy.buildClassifier(data);
                             eval.crossValidateModel(classCopy, data, folds, new Random(seed), new Object[] { });
                             outf.println("Cost: "+i+" Gamma: "+j+" Attributi: " + data.numAttributes()+" F Measure: "+eval.weightedFMeasure() + " True Positive: " + eval.weightedTruePositiveRate());
                             outf.flush();
@@ -378,6 +380,9 @@ public class GridSearchSVM extends javax.swing.JFrame {
                     }
                     
                     closeFileOutput();
+                    JFrame testFrame = new JFrame();
+                    JOptionPane.showMessageDialog(testFrame, "Processing finished","Done",JOptionPane.INFORMATION_MESSAGE);
+                    runButton.setEnabled(true);
                 }catch(Exception e){
                     e.printStackTrace();
                 }
@@ -574,8 +579,18 @@ public class GridSearchSVM extends javax.swing.JFrame {
         jLabel27.setText("[2^-15 ... 2^3],           costGamma");
 
         costStepLabelHelp.setText("?");
+        costStepLabelHelp.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                costStepLabelHelpMouseClicked(evt);
+            }
+        });
 
         gammaStepLabelHelp.setText("?");
+        gammaStepLabelHelp.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                gammaStepLabelHelpMouseClicked(evt);
+            }
+        });
 
         jMenu1.setText("File");
         jMenuBar1.add(jMenu1);
@@ -603,7 +618,7 @@ public class GridSearchSVM extends javax.swing.JFrame {
                                 .addComponent(jLabel25)
                                 .addGap(2, 2, 2)
                                 .addComponent(textNumFolds, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(51, 51, 51)
                         .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(39, 39, 39)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -620,7 +635,7 @@ public class GridSearchSVM extends javax.swing.JFrame {
                         .addGap(48, 48, 48))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel3)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -698,7 +713,7 @@ public class GridSearchSVM extends javax.swing.JFrame {
                                         .addComponent(jLabel7)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                                 .addComponent(textClass, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addGap(0, 0, 0))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -842,7 +857,7 @@ public class GridSearchSVM extends javax.swing.JFrame {
         {
             if (canExecute) this.executeGridSearch();
         }
-       
+        
         
     }//GEN-LAST:event_runButtonActionPerformed
     
@@ -892,6 +907,18 @@ public class GridSearchSVM extends javax.swing.JFrame {
             }
         } 
     }//GEN-LAST:event_selectFileActionPerformed
+    
+    private void costStepLabelHelpMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_costStepLabelHelpMouseClicked
+        // TODO add your handling code here:
+        String message = "This value is a step to increment the exponential value of 2^costStep. For example, if costStep is 2, the value of step starts from 2^-5 to 2^-3, 2^-1 and so on up to 2^15.";
+        JOptionPane.showMessageDialog(new JFrame(), message, "Help",JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_costStepLabelHelpMouseClicked
+    
+    private void gammaStepLabelHelpMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gammaStepLabelHelpMouseClicked
+        // TODO add your handling code here:
+        String message = "This value is a step to increment the exponential value of 2^gammaStep. For example, if gammaStep is 2, the value of step starts from 2^-15 to 2^-13, 2^-11 and so on up to 2^3.";
+        JOptionPane.showMessageDialog(new JFrame(), message, "Help",JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_gammaStepLabelHelpMouseClicked
     
     /**
      * @param args the command line arguments
